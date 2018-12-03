@@ -1,0 +1,72 @@
+import React, { Component } from "react";
+//import logo from './logo.svg';
+//import "./App.css";
+import Forms from "/home/digimantra/hr-recruiter/Resume_Fe/src/package/App/components/NotCommon/form.js";
+
+class App extends Component {
+  state = {
+    fields: {}
+  };
+  // onChange = updatedValue => {
+  //   this.setState({
+  //     fields: {
+  //       ...this.state.fields,
+  //       ...updatedValue
+  //     }
+  //   });
+  //   // console.log("App comp got:", fields);
+  // };
+  componentDidMount() {
+    this.onSubmit();
+  }
+  onSubmit = async updatedValue => {
+    // e.preventDefault();
+    {
+      this.setState(
+        {
+          fields: {
+            ...this.state.fields,
+            ...updatedValue
+          }
+        },
+        () =>
+          fetch("/api/persional/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              Name: this.state.fields.firstName,
+              Email_id: this.state.fields.email,
+              mobile_number: this.state.fields.MobileNo,
+              gender: this.state.fields.selectedGender,
+              Marital_Status: this.state.fields.Marital_Status,
+              dob: this.state.fields.selectedDate
+            })
+          })
+      );
+    }
+    // await fetch("/api/persional/", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify({
+    //     Name: this.state.fields.firstName,
+    //     Email_id: this.state.fields.email
+    //   })
+    // });
+    console.log(JSON.stringify(this.state.fields));
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <Forms onSubmit={fields => this.onSubmit(fields)} />
+        <p>{JSON.stringify(this.state.fields)}</p>
+      </div>
+    );
+  }
+}
+
+export default App;
